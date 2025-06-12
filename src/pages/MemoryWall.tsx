@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-
 import { motion } from "framer-motion";
+import { Link, useSearchParams } from "react-router-dom";
 import AddMemoryModal from "../components/AddMemoryModal";
 import MemoryCard from "../components/MemoryCard";
 import type { Memory, MemoryFormData } from "../types/globle";
 
 const MemoryWall = () => {
-  const [showModal, setShowModal] = useState(false);
   const [memories, setMemories] = useState<Memory[]>([]);
+  const [searchParams] = useSearchParams();
+  const add = searchParams.get("add");
+
+  const [showModal, setShowModal] = useState(add === "true");
 
   useEffect(() => {
     const stored = localStorage.getItem("memories");
@@ -44,10 +47,14 @@ const MemoryWall = () => {
         >
           + Add Memory
         </button>
+        
       </div>
 
       {showModal && (
-        <AddMemoryModal onClose={() => setShowModal(false)} onSubmit={handleAddMemory} />
+        <AddMemoryModal
+          onClose={() => setShowModal(false)}
+          onSubmit={handleAddMemory}
+        />
       )}
 
       {memories.length === 0 ? (
@@ -60,9 +67,20 @@ const MemoryWall = () => {
         </motion.p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {memories.map((memory) => (
-            <MemoryCard key={memory.id} memory={memory} />
-          ))}
+         {memories.map((memory) => (
+  <div key={memory.id}>
+    <MemoryCard memory={memory} />
+    <div className="text-right mt-2">
+      <Link
+        to={`/memory/${memory.id}`}
+        className="text-sm text-rose-500 hover:underline"
+      >
+        View Details →
+      </Link>
+    </div>
+  </div>
+))}
+
         </div>
       )}
     </div>

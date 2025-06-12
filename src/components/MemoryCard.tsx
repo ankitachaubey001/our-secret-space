@@ -24,19 +24,17 @@ export default function MemoryCard({ memory }: MemoryCardProps) {
           className="w-full h-48 object-cover rounded-xl mb-3"
         />
       )}
-      <h3 className="text-xl font-semibold text-rose-500 mb-1">
-        {memory.title}
-      </h3>
-      <p className="text-gray-600 text-sm mb-2 whitespace-pre-wrap">
-        {memory.message}
-      </p>
-      <div className="text-xs text-right text-rose-400">
-        {memory.date.toLocaleDateString("en-IN", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })}
-      </div>
+<div className="p-4">
+  {memory.tag && (
+    <span className="inline-block bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+      {memory.tag}
+    </span>
+  )}
+  <h2 className="text-xl font-bold mb-1">{memory.title}</h2>
+  <p className="text-gray-600 text-sm">{memory.date.toLocaleDateString()}</p>
+</div>
+
+      
     </motion.div>
   );
 }

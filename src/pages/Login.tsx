@@ -7,7 +7,7 @@ export default function Login() {
 
   const handleEnter = () => {
     if (secret.trim()) {
-      navigate("/memories");
+      navigate("/home");
     }
   };
 
