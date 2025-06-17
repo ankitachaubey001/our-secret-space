@@ -1,13 +1,22 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+// pages/Login.tsx
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../hooks/firebaseConfig";
 
 export default function Login() {
-  const [secret, setSecret] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  const handleEnter = () => {
-    if (secret.trim()) {
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem("secret-access", "unlocked");
       navigate("/home");
+    } catch (err) {
+      setError("Invalid credentials 💔");
     }
   };
 
@@ -17,21 +26,30 @@ export default function Login() {
         <h1 className="text-4xl font-bold text-rose-600 mb-3 font-[DancingScript]">
           💖 Our Secret Space
         </h1>
-        <p className="text-gray-600 text-sm mb-10 font-light">
+        <p className="text-gray-600 text-sm mb-6 font-light">
           A private place to capture & cherish your most precious moments.
         </p>
 
         <input
-          type="text"
-          value={secret}
-          onChange={(e) => setSecret(e.target.value)}
-          placeholder="💌 Your secret key..."
-          className="w-full px-5 py-3 rounded-full border border-rose-300 bg-rose-50 placeholder:text-rose-300 text-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-rose-400 focus:bg-white transition mb-5"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="📧 Email"
+          className="w-full px-5 py-3 mb-4 rounded-full border border-rose-300 bg-rose-50 text-sm focus:ring-rose-400"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="🔐 Password"
+          className="w-full px-5 py-3 mb-5 rounded-full border border-rose-300 bg-rose-50 text-sm focus:ring-rose-400"
         />
 
+        {error && <p className="text-sm text-red-500 mb-2">{error}</p>}
+
         <button
-          onClick={handleEnter}
-          className="w-full bg-gradient-to-r from-rose-400 via-pink-500 to-rose-400 hover:from-rose-500 hover:to-pink-600 text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-rose-300 transition-all duration-300"
+          onClick={handleLogin}
+          className="w-full bg-gradient-to-r from-rose-400 via-pink-500 to-rose-400 text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-rose-300"
         >
           ✨ Enter My Space
         </button>

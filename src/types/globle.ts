@@ -1,12 +1,22 @@
+// export type Memory = {
+//   id: number;
+//   title: string;
+//   message: string;
+//   date: Date;
+//   image?: string;
+//   description?: string;
+//   tag?: string;
+//   isLocked?: boolean;
+//   password?: string;
+
+// };
 export type Memory = {
-  id: number;
+  id: string; 
   title: string;
   message: string;
   date: Date;
   image?: string;
-  description?: string;
-  tag?: string;
-
+  tag: string;
 };
 export type MemoryFormData = {
   title: string;
@@ -14,6 +24,8 @@ export type MemoryFormData = {
   date: string;
   image?: string;
   tag?: string;
+  isLocked?: boolean;
+  password?: string;
 };
 
 
@@ -22,6 +34,8 @@ export type Letter = {
   title: string;
   message: string;
   category: LetterCategory;
+  isLocked?: boolean;
+  password?: string;
 };
 
 export type LetterCategory =
