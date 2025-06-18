@@ -22,9 +22,7 @@ Forever yours,
   return (
     <div className="flex justify-center items-center min-h-[300px]">
       <div className="relative w-72 h-48 perspective" onClick={() => setOpened(true)}>
-        {/* Envelope Base */}
         <div className="relative w-full h-full bg-rose-300 rounded-b-xl shadow-lg overflow-hidden z-10">
-          {/* Flap */}
           <motion.div
             className="absolute top-0 left-0 w-full h-24 bg-rose-400 rounded-b-xl origin-top z-20"
             initial={false}
@@ -37,14 +35,12 @@ Forever yours,
             }}
           />
 
-          {/* Prompt (if not opened) */}
           {!opened && (
             <div className="absolute inset-0 flex items-center justify-center z-10 text-white font-semibold text-lg">
               💌 Tap to Open
             </div>
           )}
 
-          {/* Letter Content */}
           <motion.div
             className="absolute inset-0 bg-white text-gray-800 p-4 text-sm rounded-xl z-0 overflow-y-auto"
             initial={{ y: 200, opacity: 0 }}

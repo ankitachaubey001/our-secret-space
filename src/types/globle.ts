@@ -17,6 +17,8 @@ export type Memory = {
   date: Date;
   image?: string;
   tag: string;
+    description?: string;
+
 };
 export type MemoryFormData = {
   title: string;
@@ -29,27 +31,35 @@ export type MemoryFormData = {
 };
 
 
-export type Letter = {
-  id: number;
-  title: string;
-  message: string;
-  category: LetterCategory;
-  isLocked?: boolean;
-  password?: string;
-};
-
 export type LetterCategory =
   | "Open When You're Sad"
   | "Anniversary Note"
   | "First Fight"
   | "Random Love";
 
-  export type VoiceNote = {
-  id: number;
+export type Letter = {
+  id: string; // Firestore document ID
   title: string;
-  tags: string[];
-  audioUrl: string;
+  message: string;
+  category: LetterCategory;
+  date: Date;
+  isLocked: boolean;
+  password?: string;
+};
+
+export type VoiceNote = {
+  id: string; // Firestore doc ID
+  title: string;
+  tag: string;           // main tag
+  tags: string[];        // optional multiple tags
+  audioUrl: string;      // URL for audio playback
+  createdAt: Date;       // used for sorting/display
+};
+
+
+export type SpecialDay = {
+  id: string;
+  title: string;
+  date: string;
   createdAt: Date;
-  audio: string ;
-  tag?: string;
 };

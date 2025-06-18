@@ -1,45 +1,16 @@
-// pages/LetterList.tsx
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { Letter } from "../types/globle";
+import { fetchLetters } from "../libs/firestoreHelpers";
+import { FiPlus } from "react-icons/fi";
 
 export default function LetterList() {
   const [letters, setLetters] = useState<Letter[]>([]);
+  const navigate = useNavigate();
 
-useEffect(() => {
-  const stored = localStorage.getItem("letters");
-  if (!stored) {
-    const sampleLetters = [
-      {
-        id: 1,
-        title: "Open When You're Sad",
-        message: "Hey love, if you're reading this, know that I'm always with you 💖",
-        category: "Open When You're Sad" as Letter["category"],
-        date: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        title: "Anniversary Love Note",
-        message: "Happy Anniversary, my forever person 🥂✨",
-        category: "Anniversary" as Letter["category"],
-        date: new Date().toISOString(),
-      },
-      {
-        id: 3,
-        title: "After Our First Fight",
-        message: "No matter what, I love you even through storms 💌",
-        category: "After a Fight" as Letter["category"],
-        date: new Date().toISOString(),
-      },
-    ];
-
-    localStorage.setItem("letters", JSON.stringify(sampleLetters));
-    setLetters(sampleLetters);
-  } else {
-    setLetters(JSON.parse(stored));
-  }
-}, []);
-
+  useEffect(() => {
+    fetchLetters().then(setLetters);
+  }, []);
 
   const grouped = letters.reduce((acc, letter) => {
     (acc[letter.category] ||= []).push(letter);
@@ -48,8 +19,13 @@ useEffect(() => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold text-rose-600 mb-6">💌 Letters</h1>
-      {Object.entries(grouped).map(([category, list]) => (
+ <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-rose-600">Letters 💌</h1>
+        <button className="flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-full shadow-md transition" onClick={()=>navigate("/letters/new")}>
+          <FiPlus />
+          Add Letter
+        </button>
+      </div>      {Object.entries(grouped).map(([category, list]) => (
         <div key={category} className="mb-8">
           <h2 className="text-xl font-semibold text-rose-500 mb-3">{category}</h2>
           <ul className="space-y-3">

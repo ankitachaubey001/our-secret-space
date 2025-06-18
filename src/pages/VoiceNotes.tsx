@@ -1,23 +1,25 @@
-// pages/VoiceNotes.tsx
 import { useEffect, useState } from "react";
 import AddVoiceNoteModal from "../components/AddVoiceNoteModal";
 import type { VoiceNote } from "../types/globle";
+import { addVoiceNoteToFirestore, fetchVoiceNotes } from "../libs/firestoreHelpers";
 
 export default function VoiceNotes() {
   const [notes, setNotes] = useState<VoiceNote[]>([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("voice-notes");
-    if (stored) {
-      setNotes(JSON.parse(stored));
-    }
+    const loadNotes = async () => {
+      const data = await fetchVoiceNotes();
+      setNotes(data);
+    };
+    loadNotes();
   }, []);
 
-  const addNote = (note: VoiceNote) => {
-    const updated = [...notes, note];
-    setNotes(updated);
-    localStorage.setItem("voice-notes", JSON.stringify(updated));
+  const addNote = async (note: VoiceNote) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...rest } = note;
+    const docId = await addVoiceNoteToFirestore(rest);
+    setNotes([...notes, { ...note, id: docId }]);
   };
 
   return (
@@ -38,17 +40,14 @@ export default function VoiceNotes() {
           {notes.map((note) => (
             <li key={note.id} className="p-4 bg-pink-100 rounded-xl shadow">
               <div className="font-semibold text-rose-600 mb-1">{note.title}</div>
-              <audio controls src={note.audio} className="w-full" />
-              <div className="mt-2 flex flex-wrap gap-2">
-                {note.tags.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="px-2 py-1 bg-pink-200 text-sm rounded-full text-pink-700"
-                  >
-                    #{tag}
+              <audio controls src={note.audioUrl} className="w-full" />
+              {note.tag && (
+                <div className="mt-2">
+                  <span className="px-2 py-1 bg-pink-200 text-sm rounded-full text-pink-700">
+                    #{note.tag}
                   </span>
-                ))}
-              </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>

@@ -1,7 +1,7 @@
-// pages/CreateLetter.tsx
 import { useState } from "react";
-import type { Letter, LetterCategory } from "../types/globle";
+import type { LetterCategory } from "../types/globle";
 import { useNavigate } from "react-router-dom";
+import { createLetter } from "../libs/firestoreHelpers";
 
 const categories: LetterCategory[] = [
   "Open When You're Sad",
@@ -21,20 +21,20 @@ export default function CreateLetter() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    const stored = localStorage.getItem("letters");
-    const old: Letter[] = stored ? JSON.parse(stored) : [];
+  const handleSubmit = async () => {
+    if (!form.title || !form.message) {
+      alert("Title and message are required.");
+      return;
+    }
 
-    const newLetter: Letter = {
-      id: Date.now(),
+    await createLetter({
       title: form.title,
       message: form.message,
-      category: form.category as LetterCategory,
+      category: form.category,
       isLocked: form.isLocked,
-      password: form.isLocked ? form.password : undefined,
-    };
+      password: form.isLocked ? form.password : "",
+    });
 
-    localStorage.setItem("letters", JSON.stringify([newLetter, ...old]));
     navigate("/letters");
   };
 

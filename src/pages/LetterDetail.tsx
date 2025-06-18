@@ -1,8 +1,9 @@
-// pages/LetterDetail.tsx
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Letter } from "../types/globle";
 import LetterEnvelope from "../components/letter/LetterEnvelope";
+import { fetchLetterById } from "../libs/firestoreHelpers";
+
 
 export default function LetterDetail() {
   const { id } = useParams();
@@ -11,12 +12,11 @@ export default function LetterDetail() {
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("letters");
-    if (stored) {
-      const parsed: Letter[] = JSON.parse(stored);
-      const found = parsed.find((l) => l.id === Number(id));
-      setLetter(found || null);
-      setIsUnlocked(found ? !found.isLocked : false);
+    if (id) {
+      fetchLetterById(id).then((data) => {
+        setLetter(data);
+        setIsUnlocked(!!data && !data?.isLocked);
+      });
     }
   }, [id]);
 

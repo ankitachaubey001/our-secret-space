@@ -1,4 +1,3 @@
-// components/AddVoiceNoteModal.tsx
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import type { VoiceNote } from "../types/globle";
@@ -44,20 +43,20 @@ export default function AddVoiceNoteModal({ onClose, onSubmit }: Props) {
     setIsRecording(false);
   };
 
-  const handleSubmit = () => {
-    if (!title || !audioUrl) return;
-    const note: VoiceNote = {
-        id: Date.now(),
-        title,
-        tag,
-        audioUrl,
-        tags: [],
-        createdAt: new Date(),
-        audio: ""
-    };
-    onSubmit(note);
-    onClose();
+ const handleSubmit = () => {
+  if (!title || !audioUrl) return;
+  const note: VoiceNote = {
+    id: "", // will be set after Firestore returns the id
+    title,
+    tag,
+    tags: tag ? [tag] : [],
+    createdAt: new Date(),
+    audioUrl
   };
+  onSubmit(note);
+  onClose();
+};
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">

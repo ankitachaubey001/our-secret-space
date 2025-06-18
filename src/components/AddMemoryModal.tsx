@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import type { MemoryFormData } from "../types/globle";
 
-
 type AddMemoryModalProps = {
   onClose: () => void;
   onSubmit: (formData: MemoryFormData) => void;
@@ -14,13 +13,32 @@ export default function AddMemoryModal({ onClose, onSubmit }: AddMemoryModalProp
     message: "",
     date: "",
     image: "",
-     tag: "",
+    tag: "",
   });
 
+  const [dragActive, setDragActive] = useState(false);
+
+  const handleFileUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData({ ...formData, image: reader.result as string });
+    };
+    reader.readAsDataURL(file); 
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragActive(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      handleFileUpload(file);
+    }
+  };
+
   const handleSubmit = () => {
-if (!formData.title || !formData.message || !formData.date || !formData.tag) return;
+    if (!formData.title || !formData.message || !formData.date || !formData.tag) return;
     onSubmit(formData);
-    setFormData({ title: "", message: "", date: "", image: "" });
+    setFormData({ title: "", message: "", date: "", image: "", tag: "" });
   };
 
   return (
@@ -29,6 +47,12 @@ if (!formData.title || !formData.message || !formData.date || !formData.tag) ret
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md"
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragActive(true);
+        }}
+        onDragLeave={() => setDragActive(false)}
+        onDrop={handleDrop}
       >
         <h2 className="text-2xl font-bold text-rose-500 mb-4 text-center">New Memory</h2>
 
@@ -53,29 +77,43 @@ if (!formData.title || !formData.message || !formData.date || !formData.tag) ret
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             className="w-full px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
           />
-          <input
-            type="url"
-            placeholder="Image URL (optional) 📷"
-            value={formData.image}
-            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+
+          <div
+            className={`w-full p-4 border-2 ${
+              dragActive ? "border-rose-400" : "border-rose-200"
+            } border-dashed rounded-lg text-center text-gray-500 cursor-pointer transition`}
+            onClick={() => document.getElementById("imageInput")?.click()}
+          >
+            {formData.image ? (
+              <img src={formData.image} alt="Uploaded" className="mx-auto max-h-30 rounded" />
+            ) : (
+              <p>Drag & drop an image or click to upload 📷</p>
+            )}
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFileUpload(file);
+              }}
+              className="hidden"
+            />
+          </div>
+
+          <select
+            value={formData.tag}
+            onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
             className="w-full px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
-          />
+          >
+            <option value="">Select category</option>
+            <option value="Anniversary">Anniversary</option>
+            <option value="Trip">Trip</option>
+            <option value="Casual">Casual</option>
+            <option value="Celebration">Celebration</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
-<div>
-  {/* <label className="block text-sm font-medium text-gray-700 mb-1">Category 🏷️</label> */}
-  <select
-    value={formData.tag || ""}
-    onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-    className="w-full px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
-  >
-    <option value="">Select category</option>
-    <option value="Anniversary">Anniversary</option>
-    <option value="Trip">Trip</option>
-    <option value="Casual">Casual</option>
-    <option value="Celebration">Celebration</option>
-    <option value="Other">Other</option>
-  </select>
-</div>
 
         <div className="flex justify-end gap-2 mt-6">
           <button

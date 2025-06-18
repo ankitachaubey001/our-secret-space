@@ -13,7 +13,7 @@ const MemoryDetail = () => {
         ...m,
         date: new Date(m.date),
       }));
-      const found = memories.find((m) => m.id === Number(id));
+      const found = memories.find((m) => Number(m.id) === Number(id));
       setMemory(found || null);
     }
   }, [id]);

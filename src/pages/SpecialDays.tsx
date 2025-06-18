@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-
-type SpecialDay = {
-  id: number;
-  title: string;
-  date: string;
-};
+import {
+  fetchSpecialDays,
+  addSpecialDay,
+} from "../libs/firestoreHelpers";
+import type { SpecialDay } from "../types/globle";
 
 const SpecialDays = () => {
   const [days, setDays] = useState<SpecialDay[]>([]);
@@ -13,32 +12,24 @@ const SpecialDays = () => {
   const [newDay, setNewDay] = useState({ title: "", date: "" });
 
   useEffect(() => {
-    const stored = localStorage.getItem("specialDays");
-    if (stored) {
-      setDays(JSON.parse(stored));
-    } else {
-      setDays([
-        { id: 1, title: "First Date", date: "2022-11-15" },
-        { id: 2, title: "Anniversary", date: "2023-04-01" },
-        { id: 3, title: "Goa Trip", date: "2023-12-05" },
-      ]);
-    }
+    const load = async () => {
+      const data = await fetchSpecialDays();
+      setDays(data);
+    };
+    load();
   }, []);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newDay.title || !newDay.date) return;
 
-    const updated = [
-      ...days,
-      {
-        id: Date.now(),
-        title: newDay.title,
-        date: newDay.date,
-      },
-    ];
-
-    setDays(updated);
-    localStorage.setItem("specialDays", JSON.stringify(updated));
+    const id = await addSpecialDay({ title: newDay.title, date: newDay.date });
+    const newSpecial: SpecialDay = {
+      id,
+      title: newDay.title,
+      date: newDay.date,
+      createdAt: new Date(),
+    };
+    setDays([...days, newSpecial]);
     setNewDay({ title: "", date: "" });
     setShowModal(false);
   };
