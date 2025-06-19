@@ -31,6 +31,11 @@ export type MemoryFormData = {
 };
 
 
+export type TaskType = {
+  id: string;
+  text: string;
+  completed: boolean;
+};
 export type LetterCategory =
   | "Open When You're Sad"
   | "Anniversary Note"

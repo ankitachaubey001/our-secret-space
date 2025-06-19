@@ -1,9 +1,10 @@
-// pages/ToDoPage.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { addTaskToFirestore, deleteTaskFromFirestore, fetchTasks, toggleTaskCompletion } from "../libs/firestoreHelpers";
 
-type Task = {
-  id: number;
+
+export type Task = {
+  id: string;
   text: string;
   completed: boolean;
 };
@@ -12,15 +13,32 @@ export default function ToDoPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState("");
 
-  const addTask = () => {
+  useEffect(() => {
+    fetchTasks().then(setTasks);
+  }, []);
+
+  const addTask = async () => {
     if (!input.trim()) return;
-    const newTask: Task = {
-      id: Date.now(),
+    const newTask = {
       text: input.trim(),
       completed: false,
     };
-    setTasks([newTask, ...tasks]);
+    await addTaskToFirestore(newTask);
+    const updated = await fetchTasks();
+    setTasks(updated);
     setInput("");
+  };
+
+  const handleToggle = async (task: Task) => {
+    await toggleTaskCompletion(task.id, task.completed);
+    const updated = await fetchTasks();
+    setTasks(updated);
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteTaskFromFirestore(id);
+    const updated = await fetchTasks();
+    setTasks(updated);
   };
 
   return (
@@ -56,27 +74,29 @@ export default function ToDoPage() {
           {tasks.map((task) => (
             <li
               key={task.id}
-              className="flex items-center bg-pink-50 rounded-xl p-3 shadow"
+              className="flex items-center justify-between bg-pink-50 rounded-xl p-3 shadow"
             >
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={() =>
-                  setTasks((prev) =>
-                    prev.map((t) =>
-                      t.id === task.id ? { ...t, completed: !t.completed } : t
-                    )
-                  )
-                }
-                className="mr-3 w-5 h-5 text-rose-500 accent-rose-500"
-              />
-              <span
-                className={`text-gray-700 ${
-                  task.completed ? "line-through opacity-60" : ""
-                }`}
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => handleToggle(task)}
+                  className="mr-3 w-5 h-5 text-rose-500 accent-rose-500"
+                />
+                <span
+                  className={`text-gray-700 ${
+                    task.completed ? "line-through opacity-60" : ""
+                  }`}
+                >
+                  {task.text}
+                </span>
+              </div>
+              <button
+                onClick={() => handleDelete(task.id)}
+                className="text-sm text-gray-400 hover:text-rose-500 transition"
               >
-                {task.text}
-              </span>
+                🗑️
+              </button>
             </li>
           ))}
         </ul>

@@ -38,12 +38,12 @@ export default function Navbar() {
       <Link to="/todo" className="block text-gray-700 hover:text-rose-500 py-2">
         To-Do
       </Link>
-      <Link
+      {/* <Link
         to="/settings"
         className="text-gray-600 hover:text-rose-500 font-medium transition"
       >
         Settings
-      </Link>
+      </Link> */}
     </>
   );
 

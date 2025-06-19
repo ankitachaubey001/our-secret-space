@@ -1,4 +1,3 @@
-import React from "react";
 
 const musics = [
   { name: "Lo-Fi Beats", url: "/music/lofi.mp3" },

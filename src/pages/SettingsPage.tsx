@@ -1,9 +1,9 @@
 // pages/SettingsPage.tsx
 
 import { useState } from "react";
-import ThemeColorSelector from "../components/settings/ThemeColorSelector";
 import BackgroundSelector from "../components/settings/BackgroundSelector";
 import MusicSelector from "../components/settings/MusicSelector";
+import ThemeColorSelector from "../components/settings/ThemeColorSelector";
 
 /**
  * SettingsPage allows users to customize:

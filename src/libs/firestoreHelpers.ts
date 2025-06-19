@@ -1,6 +1,6 @@
-import { collection, getDocs, addDoc, Timestamp, getDoc, doc, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, addDoc, Timestamp, getDoc, doc, orderBy, query, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../hooks/firebaseConfig";
-import type { Letter, Memory, MemoryFormData, SpecialDay, VoiceNote } from "../types/globle";
+import type { Letter, Memory, MemoryFormData, SpecialDay, TaskType, VoiceNote } from "../types/globle";
 
 
 const collectionRef = collection(db, "memories");
@@ -90,10 +90,6 @@ export const fetchVoiceNotes = async (): Promise<VoiceNote[]> => {
 };
 
 
-
-
-
-
 export const fetchSpecialDays = async (): Promise<SpecialDay[]> => {
   const q = query(collection(db, "specialDays"), orderBy("createdAt", "asc"));
   const snapshot = await getDocs(q);
@@ -116,3 +112,27 @@ export const addSpecialDay = async (day: Omit<SpecialDay, "id" | "createdAt">) =
   return docRef.id;
 };
 
+
+const todosRef = collection(db, "todos");
+
+export const fetchTasks = async (): Promise<TaskType[]> => {
+  const snapshot = await getDocs(todosRef);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...(doc.data() as Omit<TaskType, "id">),
+  }));
+};
+
+export const addTaskToFirestore = async (task: Omit<TaskType, "id">) => {
+  await addDoc(todosRef, task);
+};
+
+export const toggleTaskCompletion = async (taskId: string, currentState: boolean) => {
+  const docRef = doc(db, "todos", taskId);
+  await updateDoc(docRef, { completed: !currentState });
+};
+
+export const deleteTaskFromFirestore = async (taskId: string) => {
+  const docRef = doc(db, "todos", taskId);
+  await deleteDoc(docRef);
+};
