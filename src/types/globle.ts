@@ -16,6 +16,7 @@ export type Memory = {
   message: string;
   date: Date;
   image?: string;
+  isLocked?: boolean;
   tag: string;
     description?: string;
 

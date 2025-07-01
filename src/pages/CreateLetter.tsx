@@ -91,7 +91,7 @@ export default function CreateLetter() {
 
       <button
         onClick={handleSubmit}
-        className="bg-rose-500 text-white py-2 px-6 rounded hover:bg-rose-600"
+        className="bg-rose-500 text-white py-2 px-6 rounded hover:bg-rose-600 cursor-pointer"
       >
         Save 💖
       </button>

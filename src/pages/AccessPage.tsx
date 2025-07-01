@@ -1,4 +1,3 @@
-// pages/AccessPage.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
@@ -55,7 +54,7 @@ export default function AccessPage() {
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="bg-rose-500 text-white px-4 py-2 rounded-lg hover:bg-rose-600 w-full"
+          className="bg-rose-500 text-white px-4 py-2 rounded-lg hover:bg-rose-600 w-full cursor-pointer"
         >
           {loading ? "Checking..." : "Unlock 💖"}
         </button>

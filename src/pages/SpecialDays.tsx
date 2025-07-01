@@ -47,7 +47,7 @@ const SpecialDays = () => {
         <h1 className="text-3xl font-bold text-rose-600">📅 Special Days</h1>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-rose-500 text-white px-4 py-2 rounded-lg shadow hover:bg-rose-600 transition"
+          className="bg-rose-500 text-white px-4 py-2 rounded-lg shadow hover:bg-rose-600 transition cursor-pointer"
         >
           ➕ Add
         </button>
@@ -90,13 +90,13 @@ const SpecialDays = () => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAdd}
-                className="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition"
+                className="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition cursor-pointer cursor-pointer"
               >
                 Save
               </button>

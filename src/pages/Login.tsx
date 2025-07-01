@@ -49,7 +49,7 @@ export default function Login() {
 
         <button
           onClick={handleLogin}
-          className="w-full bg-gradient-to-r from-rose-400 via-pink-500 to-rose-400 text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-rose-300"
+          className="w-full bg-gradient-to-r from-rose-400 via-pink-500 to-rose-400 text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-rose-300 cursor-pointer"
         >
           ✨ Enter My Space
         </button>

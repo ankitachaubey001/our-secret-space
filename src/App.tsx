@@ -28,6 +28,7 @@ export default function App() {
 
   useEffect(() => {
     const unlocked = localStorage.getItem("secret-access") === "unlocked";
+    console.log("App unlocked state:", unlocked);
     setIsUnlocked(unlocked);
   }, [location]);
 
@@ -39,7 +40,6 @@ export default function App() {
         <Route path="/" element={<Login />} />
         <Route path="/access" element={<AccessPage />} />
         
-        {/* Protected Routes */}
         {isUnlocked ? (
           <>
             <Route path="/home" element={<Home />} />
@@ -57,7 +57,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/access" replace />} />
         )}
 
-        {/* Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

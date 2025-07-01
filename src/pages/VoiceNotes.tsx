@@ -28,7 +28,7 @@ export default function VoiceNotes() {
 
       <button
         onClick={() => setShowModal(true)}
-        className="mb-4 bg-rose-500 text-white px-4 py-2 rounded shadow hover:bg-rose-600"
+        className="mb-4 bg-rose-500 text-white px-4 py-2 rounded shadow hover:bg-rose-600 cursor-pointer"
       >
         + Add Voice Note
       </button>

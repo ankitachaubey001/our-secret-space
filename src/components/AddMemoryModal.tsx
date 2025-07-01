@@ -118,13 +118,13 @@ export default function AddMemoryModal({ onClose, onSubmit }: AddMemoryModalProp
         <div className="flex justify-end gap-2 mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+            className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition"
+            className="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition cursor-pointer"
           >
             Add 💌
           </button>

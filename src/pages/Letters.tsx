@@ -17,7 +17,7 @@ const Letters = () => {
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-rose-600">Letters 💌</h1>
-        <button className="flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-full shadow-md transition">
+        <button className="flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-full shadow-md transition cursor-pointer">
           <FiPlus />
           Add Letter
         </button>

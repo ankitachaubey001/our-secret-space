@@ -85,7 +85,7 @@ export default function AddVoiceNoteModal({ onClose, onSubmit }: Props) {
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={isRecording ? stopRecording : startRecording}
-            className={`px-4 py-2 rounded text-white ${isRecording ? "bg-gray-500" : "bg-rose-500"}`}
+            className={`px-4 py-2 rounded text-white cursor-pointer ${isRecording ? "bg-gray-500" : "bg-rose-500"}`}
           >
             {isRecording ? "Stop Recording" : "🎙️ Record"}
           </button>
@@ -101,8 +101,8 @@ export default function AddVoiceNoteModal({ onClose, onSubmit }: Props) {
         )}
 
         <div className="flex justify-end gap-3">
-          <button onClick={onClose} className="bg-gray-200 px-4 py-2 rounded">Cancel</button>
-          <button onClick={handleSubmit} className="bg-rose-500 text-white px-4 py-2 rounded">Save</button>
+          <button onClick={onClose} className="bg-gray-200 px-4 py-2 rounded cursor-pointer">Cancel</button>
+          <button onClick={handleSubmit} className="bg-rose-500 text-white px-4 py-2 rounded cursor-pointer">Save</button>
         </div>
       </motion.div>
     </div>

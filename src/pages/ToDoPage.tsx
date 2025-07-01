@@ -55,7 +55,7 @@ export default function ToDoPage() {
         />
         <button
           onClick={addTask}
-          className="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-full shadow"
+          className="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-full shadow cursor-pointer"
         >
           Add
         </button>
@@ -93,7 +93,7 @@ export default function ToDoPage() {
               </div>
               <button
                 onClick={() => handleDelete(task.id)}
-                className="text-sm text-gray-400 hover:text-rose-500 transition"
+                className="text-sm text-gray-400 hover:text-rose-500 transition cursor-pointer"
               >
                 🗑️
               </button>

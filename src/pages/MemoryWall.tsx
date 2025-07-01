@@ -31,6 +31,8 @@ export default function MemoryWall() {
   const handleAddMemory = async (formData: MemoryFormData) => {
     await addMemoryToFirestore(formData);
     const updated = await fetchMemories();
+    console.log("Memory added successfully", updated);
+    alert("Memory added successfully! 💖");
     setMemories(updated);
     setShowModal(false);
   };
@@ -55,7 +57,7 @@ export default function MemoryWall() {
                 alert("Incorrect password 💔");
               }
             }}
-            className="bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition"
+            className="bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition cursor-pointer"
           >
             Unlock 💖
           </button>
@@ -70,7 +72,7 @@ export default function MemoryWall() {
         <h1 className="text-3xl font-bold text-rose-600">Memory Wall 💌</h1>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-rose-500 hover:bg-rose-600 text-white font-semibold px-4 py-2 rounded-full shadow-md"
+          className="bg-rose-500 hover:bg-rose-600 text-white font-semibold px-4 py-2 rounded-full shadow-md cursor-pointer"
         >
           + Add Memory
         </button>
