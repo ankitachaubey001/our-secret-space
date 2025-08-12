@@ -11,14 +11,13 @@ export default function Navbar() {
     { path: "/home", label: "Home" },
     { path: "/memories", label: "Memory Wall" },
     { path: "/letters", label: "Letters" },
-    // { path: "/voicenotes", label: "Voice Notes" },
     { path: "/specialdays", label: "Special Days" },
     { path: "/todo", label: "To-Do" },
   ];
 
   const handleLogout = () => {
     localStorage.removeItem("secret-access");
-    window.location.href = "/access";
+    window.location.href = "/";
   };
 
   const NavLinks = () => (
