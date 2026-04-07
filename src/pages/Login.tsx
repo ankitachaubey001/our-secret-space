@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../hooks/firebaseConfig";
 
 export default function Login() {
@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [resetStatus, setResetStatus] = useState("");
 
   const handleLogin = async () => {
     try {
@@ -17,6 +18,22 @@ export default function Login() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError("Invalid credentials. Please try again.");
+    }
+  };
+
+  const handleResetPassword = async () => {
+    setResetStatus("");
+    setError("");
+    if (!email) {
+      setError("Enter your email first to reset your password.");
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetStatus("Password reset email sent. Please check your inbox.");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      setError("Could not send reset email. Please try again.");
     }
   };
 
@@ -70,12 +87,22 @@ export default function Login() {
             </div>
 
             {error && <p className="text-sm text-rose-600 mt-3">{error}</p>}
+            {resetStatus && (
+              <p className="text-sm text-emerald-600 mt-3">{resetStatus}</p>
+            )}
 
             <button onClick={handleLogin} className="btn-primary w-full mt-6">
               Enter the space
             </button>
 
-            <p className="text-xs text-slate-500 mt-4">
+            <button
+              onClick={handleResetPassword}
+              className="btn-ghost w-full mt-3"
+            >
+              Forgot password?
+            </button>
+
+            <p className="text-xs text-slate-500 mt-2">
               Need a new access code? Visit the secret gate first.
             </p>
           </div>

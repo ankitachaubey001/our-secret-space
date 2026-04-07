@@ -1,4 +1,3 @@
-// pages/MemoryDetail.tsx
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
@@ -13,9 +12,9 @@ const MemoryDetail = () => {
   const [quoteIndex, setQuoteIndex] = useState(0);
 
   const quotes = [
-    "You are my today and all of my tomorrows 💖",
-    "Every memory with you is a treasure 🥹",
-    "Together is my favorite place to be 🌸",
+    "You are my today and all of my tomorrows",
+    "Every memory with you is a treasure",
+    "Together is my favorite place to be",
   ];
 
   useEffect(() => {
@@ -60,13 +59,10 @@ const MemoryDetail = () => {
   if (!memory) {
     return (
       <div className="text-center mt-20 text-gray-500">
-        Memory not found 💔
+        Memory not found
         <div className="mt-4">
-          <Link
-            to="/memories"
-            className="text-rose-500 underline hover:text-rose-700 transition"
-          >
-            ← Back to Memory Wall
+          <Link to="/memories" className="text-rose-500 underline hover:text-rose-700 transition">
+            Back to Memory Wall
           </Link>
         </div>
       </div>
@@ -83,11 +79,8 @@ const MemoryDetail = () => {
           <img src={memory.image} alt="zoomed" className="max-h-[90vh] rounded-xl shadow-xl" />
         </div>
       )}
-      <Link
-        to="/memories"
-        className="text-sm text-rose-500 hover:text-rose-700 transition inline-block mb-4"
-      >
-        ← Back to Memory Wall
+      <Link to="/memories" className="text-sm text-rose-500 hover:text-rose-700 transition inline-block mb-4">
+        Back to Memory Wall
       </Link>
 
       <h1 className="text-3xl font-bold text-rose-600 mb-2">{memory.title}</h1>
@@ -99,12 +92,12 @@ const MemoryDetail = () => {
           </span>
         )}
         {memory.isLocked && (
-          <span className="text-xs text-rose-400 italic">🔒 Private Memory</span>
+          <span className="text-xs text-rose-400 italic">Private Memory</span>
         )}
       </div>
 
       <p className="text-gray-700 mb-2">
-        🗓️ {memory.date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+        {memory.date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
       </p>
 
       <p className="italic text-pink-600 text-sm text-center mb-4">
@@ -112,7 +105,7 @@ const MemoryDetail = () => {
       </p>
 
       <p className="text-gray-700 mb-6 whitespace-pre-line leading-relaxed">
-        {memory.description}
+        {memory.message}
       </p>
 
       {memory.image && (
@@ -123,10 +116,6 @@ const MemoryDetail = () => {
           className="rounded-xl shadow-md max-h-[500px] w-full object-cover cursor-zoom-in transition hover:scale-[1.02]"
         />
       )}
-
-      <audio autoPlay loop className="hidden">
-        <source src="/your-soft-bg-music.mp3" type="audio/mpeg" />
-      </audio>
     </div>
   );
 };

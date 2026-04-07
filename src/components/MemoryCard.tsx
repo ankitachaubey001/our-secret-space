@@ -20,7 +20,12 @@ export default function MemoryCard({ memory }: MemoryCardProps) {
       </div>
 
       <div className="p-5">
-        {memory.tag && <span className="badge">{memory.tag}</span>}
+        <div className="flex flex-wrap items-center gap-2">
+          {memory.tag && <span className="badge">{memory.tag}</span>}
+          {memory.isFavorite && (
+            <span className="badge bg-amber-100 text-amber-700">Favorite</span>
+          )}
+        </div>
         <h2 className="text-lg font-semibold text-slate-800 mt-3">
           {memory.title}
         </h2>

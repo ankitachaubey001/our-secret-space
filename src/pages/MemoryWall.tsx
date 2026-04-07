@@ -1,128 +1,109 @@
-import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import type { Memory, MemoryFormData } from "../types/globle";
-import { addMemoryToFirestore, fetchMemories } from "../libs/firestoreHelpers";
+import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useMemories } from "../hooks/useMemories";
+import PasswordGate from "../components/memory/PasswordGate";
+import StatsBar from "../components/memory/StatsBar";
+import CountdownPanel from "../components/memory/CountdownPanel";
+import MemoryFilters from "../components/memory/MemoryFilters";
+import MemoryGrid from "../components/memory/MemoryGrid";
 import AddMemoryModal from "../components/AddMemoryModal";
-import MemoryCard from "../components/MemoryCard";
+
+type ViewMode = "grid" | "timeline";
 
 export default function MemoryWall() {
-  const [memories, setMemories] = useState<Memory[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [searchParams] = useSearchParams();
-  const add = searchParams.get("add");
-
   const [isUnlocked, setIsUnlocked] = useState(false);
-  const [inputPassword, setInputPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleted, setShowDeleted] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tagFilter, setTagFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
-  const correctPassword = "loveYou123";
+  const [searchParams] = useSearchParams();
+  if (searchParams.get("add") === "true" && !showModal) setShowModal(true);
 
-  useEffect(() => {
-    if (add === "true") setShowModal(true);
-  }, [add]);
+  const {
+    activeMemories, deletedMemories, stats,
+    nextSpecialDay,
+    handleAddMemory, handleToggleFavorite,
+    handleSoftDelete, handleRestore, handleDeleteForever,
+  } = useMemories(isUnlocked);
 
-  useEffect(() => {
-    if (isUnlocked) {
-      fetchMemories().then(setMemories);
-    }
-  }, [isUnlocked]);
+  const tags = useMemo(() => {
+    const set = new Set(activeMemories.map((m) => m.tag).filter(Boolean) as string[]);
+    return ["all", ...Array.from(set)];
+  }, [activeMemories]);
 
-  const handleAddMemory = async (formData: MemoryFormData) => {
-    await addMemoryToFirestore(formData);
-    const updated = await fetchMemories();
-    alert("Memory added successfully.");
-    setMemories(updated);
-    setShowModal(false);
-  };
+  const filteredMemories = useMemo(() => {
+    const base = showDeleted ? deletedMemories : activeMemories;
+    return base.filter((m) => {
+      const text = searchTerm.toLowerCase();
+      const matchSearch =
+        m.title.toLowerCase().includes(text) ||
+        m.message.toLowerCase().includes(text) ||
+        m.tag?.toLowerCase().includes(text);
+      const matchTag = tagFilter === "all" || m.tag === tagFilter;
+      const matchFav = !showFavoritesOnly || m.isFavorite;
+      const d = m.date ? new Date(m.date) : null;
+      const fromOk = dateFrom ? (d ? d >= new Date(dateFrom) : false) : true;
+      const toOk = dateTo ? (d ? d <= new Date(dateTo) : false) : true;
+      return matchSearch && matchTag && matchFav && fromOk && toOk;
+    });
+  }, [activeMemories, deletedMemories, showDeleted, searchTerm, tagFilter, showFavoritesOnly, dateFrom, dateTo]);
 
-  if (!isUnlocked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="page-card w-full max-w-md p-6 sm:p-8">
-          <h2 className="text-2xl font-display text-rose-700">
-            Memory Wall Locked
-          </h2>
-          <p className="text-sm text-slate-600 mt-2">
-            Enter the shared password to view and add memories.
-          </p>
-          <input
-            type="password"
-            placeholder="Shared password"
-            className="input-field mt-5"
-            value={inputPassword}
-            onChange={(e) => setInputPassword(e.target.value)}
-          />
-          <button
-            onClick={() => {
-              if (inputPassword === correctPassword) {
-                setIsUnlocked(true);
-              } else {
-                alert("Incorrect password.");
-              }
-            }}
-            className="btn-primary w-full mt-4"
-          >
-            Unlock
-          </button>
-        </div>
-      </div>
-    );
-  }
+  if (!isUnlocked) return <PasswordGate onUnlock={() => setIsUnlocked(true)} />;
 
   return (
     <div className="page-shell">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="section-title">Memory Wall</h1>
-            <p className="section-subtitle mt-1">
-              A visual timeline of your favorite shared moments.
-            </p>
+            <p className="section-subtitle mt-1">A visual timeline of your favorite shared moments.</p>
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="btn-primary"
-          >
-            Add memory
-          </button>
+          <div className="flex gap-3">
+            <button onClick={() => setShowDeleted((p) => !p)} className="btn-outline">
+              {showDeleted ? "View active" : "View trash"}
+            </button>
+            <button onClick={() => setShowModal(true)} className="btn-primary">
+              Add memory
+            </button>
+          </div>
         </div>
+
+        {/* <StatsBar {...stats} /> */}
+
+        {/* <section>
+          <CountdownPanel nextSpecialDay={nextSpecialDay} activeMemories={activeMemories} />
+        </section> */}
+
+        <MemoryFilters
+          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          tagFilter={tagFilter} setTagFilter={setTagFilter} tags={tags}
+          dateFrom={dateFrom} setDateFrom={setDateFrom}
+          dateTo={dateTo} setDateTo={setDateTo}
+          showFavoritesOnly={showFavoritesOnly} setShowFavoritesOnly={setShowFavoritesOnly}
+          viewMode={viewMode} setViewMode={setViewMode}
+        />
+
+        <MemoryGrid
+          memories={filteredMemories}
+          viewMode={viewMode}
+          showDeleted={showDeleted}
+          onToggleFavorite={handleToggleFavorite}
+          onSoftDelete={handleSoftDelete}
+          onRestore={handleRestore}
+          onDeleteForever={handleDeleteForever}
+          onAddFirst={() => setShowModal(true)}
+        />
 
         {showModal && (
           <AddMemoryModal
             onClose={() => setShowModal(false)}
-            onSubmit={handleAddMemory}
+            onSubmit={async (data) => { await handleAddMemory(data); setShowModal(false); }}
           />
-        )}
-
-        {memories.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="page-card p-10 text-center text-slate-500"
-          >
-            No memories yet. Start with your first photo and a short note.
-            <div className="mt-6">
-              <button
-                onClick={() => setShowModal(true)}
-                className="btn-outline"
-              >
-                Add your first memory
-              </button>
-            </div>
-          </motion.div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {memories.map((memory) => (
-              <div key={memory.id}>
-                <MemoryCard memory={memory} />
-                <div className="text-right mt-2">
-                  <Link to={`/memory/${memory.id}`} className="text-sm text-rose-600 hover:underline">
-                    View details
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
         )}
       </div>
     </div>

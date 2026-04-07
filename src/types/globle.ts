@@ -18,7 +18,10 @@ export type Memory = {
   image?: string;
   isLocked?: boolean;
   tag: string;
-    description?: string;
+  description?: string;
+  isFavorite?: boolean;
+  deletedAt?: Date | null;
+  createdAt?: Date;
 
 };
 export type MemoryFormData = {

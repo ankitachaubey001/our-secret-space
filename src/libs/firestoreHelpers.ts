@@ -6,7 +6,8 @@ import type { Letter, Memory, MemoryFormData, SpecialDay, TaskType, VoiceNote } 
 const collectionRef = collection(db, "memories");
 
 export async function fetchMemories(): Promise<Memory[]> {
-  const snapshot = await getDocs(collectionRef);
+  const q = query(collectionRef, orderBy("date", "desc"));
+  const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => {
     const data = doc.data();
     return {
@@ -16,6 +17,9 @@ export async function fetchMemories(): Promise<Memory[]> {
       image: data.image || "",
       tag: data.tag,
       date: data.date?.toDate?.() || new Date(),
+      isFavorite: data.isFavorite ?? false,
+      deletedAt: data.deletedAt?.toDate?.() ?? null,
+      createdAt: data.createdAt?.toDate?.() ?? null,
     };
   });
 }
@@ -24,8 +28,31 @@ export async function addMemoryToFirestore(formData: MemoryFormData) {
   const data = {
     ...formData,
     date: Timestamp.fromDate(new Date(formData.date)),
+    isFavorite: false,
+    deletedAt: null,
+    createdAt: Timestamp.now(),
   };
   await addDoc(collectionRef, data);
+}
+
+export async function toggleMemoryFavorite(memoryId: string, currentState: boolean) {
+  const docRef = doc(db, "memories", memoryId);
+  await updateDoc(docRef, { isFavorite: !currentState });
+}
+
+export async function softDeleteMemory(memoryId: string) {
+  const docRef = doc(db, "memories", memoryId);
+  await updateDoc(docRef, { deletedAt: Timestamp.now() });
+}
+
+export async function restoreMemory(memoryId: string) {
+  const docRef = doc(db, "memories", memoryId);
+  await updateDoc(docRef, { deletedAt: null });
+}
+
+export async function deleteMemoryPermanently(memoryId: string) {
+  const docRef = doc(db, "memories", memoryId);
+  await deleteDoc(docRef);
 }
 
 
