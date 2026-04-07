@@ -14,44 +14,72 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       localStorage.setItem("secret-access", "unlocked");
       navigate("/home");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      setError("Invalid credentials 💔");
+      setError("Invalid credentials. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-100 via-pink-200 to-rose-300 px-4">
-      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl px-8 py-12 w-full max-w-md text-center border border-rose-200">
-        <h1 className="text-4xl font-bold text-rose-600 mb-3 font-[DancingScript]">
-          💖 Our Secret Space
-        </h1>
-        <p className="text-gray-600 text-sm mb-6 font-light">
-          A private place to capture & cherish your most precious moments.
-        </p>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="relative w-full max-w-4xl">
+        <div className="absolute -top-12 -left-8 h-28 w-28 rounded-full bg-rose-300/40 blur-3xl" />
+        <div className="absolute -bottom-12 right-4 h-28 w-28 rounded-full bg-amber-200/60 blur-3xl" />
 
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="📧 Email"
-          className="w-full px-5 py-3 mb-4 rounded-full border border-rose-300 bg-rose-50 text-sm focus:ring-rose-400"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="🔐 Password"
-          className="w-full px-5 py-3 mb-5 rounded-full border border-rose-300 bg-rose-50 text-sm focus:ring-rose-400"
-        />
+        <div className="grid gap-8 md:grid-cols-[1.1fr_1fr] page-card p-6 sm:p-10">
+          <div className="flex flex-col justify-between gap-6">
+            <div>
+              <p className="font-cursive text-3xl text-rose-700">Our Secret Space</p>
+              <h1 className="mt-4 text-4xl sm:text-5xl font-display text-slate-900 leading-tight">
+                A private place to capture, relive, and celebrate your story.
+              </h1>
+              <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-md">
+                Store memories, letters, and little moments in one calm space
+                designed for just the two of you.
+              </p>
+            </div>
 
-        {error && <p className="text-sm text-red-500 mb-2">{error}</p>}
+            <div className="hidden md:flex items-center gap-4 text-xs text-slate-500">
+              <span className="badge">Private</span>
+              <span className="badge">Encrypted</span>
+              <span className="badge">Made for two</span>
+            </div>
+          </div>
 
-        <button
-          onClick={handleLogin}
-          className="w-full bg-gradient-to-r from-rose-400 via-pink-500 to-rose-400 text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-rose-300 cursor-pointer"
-        >
-          ✨ Enter My Space
-        </button>
+          <div className="glass-panel p-6 sm:p-8">
+            <h2 className="text-2xl font-display text-rose-700">Sign in</h2>
+            <p className="text-sm text-slate-500 mt-1">
+              Use your shared credentials to enter the space.
+            </p>
+
+            <div className="mt-6 space-y-4">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
+                className="input-field"
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="input-field"
+              />
+            </div>
+
+            {error && <p className="text-sm text-rose-600 mt-3">{error}</p>}
+
+            <button onClick={handleLogin} className="btn-primary w-full mt-6">
+              Enter the space
+            </button>
+
+            <p className="text-xs text-slate-500 mt-4">
+              Need a new access code? Visit the secret gate first.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

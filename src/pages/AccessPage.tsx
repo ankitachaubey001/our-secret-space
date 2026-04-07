@@ -14,7 +14,7 @@ export default function AccessPage() {
     if (unlocked === "unlocked") {
       navigate("/home");
     }
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -26,40 +26,55 @@ export default function AccessPage() {
 
       if (codes.includes(code)) {
         localStorage.setItem("secret-access", "unlocked");
-        navigate("/login");
+        navigate("/");
       } else {
-        setError("Invalid code 💔");
+        setError("That code does not match. Try again.");
       }
     } catch (err) {
       console.error(err);
-      setError("Something went wrong. Try again!");
+      setError("Something went wrong. Please try again.");
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-50">
-      <div className="bg-white p-6 rounded-xl shadow-lg text-center space-y-4 w-80">
-        <h2 className="text-2xl font-bold text-rose-500">🔐 Enter Secret Code</h2>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="page-card w-full max-w-lg p-6 sm:p-10">
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-300 shadow-lg shadow-rose-200/60" />
+          <div>
+            <p className="font-cursive text-2xl text-rose-700">Secret Gate</p>
+            <p className="text-xs text-slate-500">Only shared with the two of you</p>
+          </div>
+        </div>
 
-        <input
-          type="password"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="border px-4 py-2 rounded-lg w-full"
-          placeholder="Type your shared secret..."
-        />
+        <h2 className="mt-6 text-3xl font-display text-slate-900">
+          Enter your private access code
+        </h2>
+        <p className="section-subtitle mt-2">
+          This code unlocks the shared space. Keep it safe and personal.
+        </p>
 
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="bg-rose-500 text-white px-4 py-2 rounded-lg hover:bg-rose-600 w-full cursor-pointer"
-        >
-          {loading ? "Checking..." : "Unlock 💖"}
-        </button>
+        <div className="mt-6 space-y-4">
+          <input
+            type="password"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="input-field"
+            placeholder="Shared secret code"
+          />
 
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="btn-primary w-full"
+          >
+            {loading ? "Checking..." : "Unlock the space"}
+          </button>
+
+          {error && <p className="text-sm text-rose-600">{error}</p>}
+        </div>
       </div>
     </div>
   );

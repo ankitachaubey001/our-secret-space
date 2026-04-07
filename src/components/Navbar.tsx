@@ -13,6 +13,7 @@ export default function Navbar() {
     { path: "/letters", label: "Letters" },
     { path: "/specialdays", label: "Special Days" },
     { path: "/todo", label: "To-Do" },
+    { path: "/settings", label: "Settings" },
   ];
 
   const handleLogout = () => {
@@ -26,12 +27,12 @@ export default function Navbar() {
         <Link
           key={item.path}
           to={item.path}
-          className={`block py-2 text-lg font-medium transition duration-300 ${
+          className={`block py-2 text-sm font-semibold transition ${
             location.pathname === item.path
-              ? "text-rose-600 underline"
-              : "text-gray-700 hover:text-rose-500 hover:underline"
+              ? "text-rose-700"
+              : "text-slate-600 hover:text-rose-600"
           }`}
-          onClick={() => setIsOpen(false)} 
+          onClick={() => setIsOpen(false)}
         >
           {item.label}
         </Link>
@@ -39,35 +40,44 @@ export default function Navbar() {
 
       <button
         onClick={handleLogout}
-        className="block py-2 text-lg font-medium text-gray-700 hover:text-rose-500 hover:underline cursor-pointer"
+        className="block py-2 text-sm font-semibold text-slate-600 hover:text-rose-600 cursor-pointer"
       >
-        🚪 Logout
+        Logout
       </button>
     </>
   );
 
   return (
-    <nav className="bg-white shadow-md p-4 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-rose-600 flex items-center gap-2">
-          Our Secret Space <span className="animate-bounce">💖</span>
-        </h1>
+    <nav className="sticky top-0 z-50 border-b border-white/70 bg-white/70 backdrop-blur-xl">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-300 shadow-lg shadow-rose-200/60" />
+          <div>
+            <p className="text-xl font-display text-rose-800 leading-none">
+              Our Secret Space
+            </p>
+            <p className="text-xs text-slate-500">A private archive of your story</p>
+          </div>
+        </div>
 
-        <div className="hidden md:flex space-x-6">
+        <div className="hidden md:flex items-center gap-6">
           <NavLinks />
         </div>
 
         <button
           onClick={toggleDrawer}
-          className="md:hidden text-rose-600 p-2 rounded-full border border-rose-600 hover:bg-rose-50 transition cursor-pointer"
+          className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-full border border-rose-200 text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+          aria-label="Toggle navigation menu"
         >
-          {isOpen ? "✖️" : "☰"}
+          {isOpen ? "Close" : "Menu"}
         </button>
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-white shadow-lg mt-2 rounded-xl px-6 py-4 space-y-2 animate-slide-down">
-          <NavLinks />
+        <div className="md:hidden px-6 pb-6">
+          <div className="rounded-2xl bg-white/80 backdrop-blur-xl border border-rose-100 shadow-lg px-5 py-4 space-y-2">
+            <NavLinks />
+          </div>
         </div>
       )}
     </nav>

@@ -23,7 +23,7 @@ export default function AddMemoryModal({ onClose, onSubmit }: AddMemoryModalProp
     reader.onloadend = () => {
       setFormData({ ...formData, image: reader.result as string });
     };
-    reader.readAsDataURL(file); 
+    reader.readAsDataURL(file);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -42,11 +42,11 @@ export default function AddMemoryModal({ onClose, onSubmit }: AddMemoryModalProp
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={{ scale: 0.92, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md"
+        className="page-card w-full max-w-xl p-6 sm:p-8"
         onDragOver={(e) => {
           e.preventDefault();
           setDragActive(true);
@@ -54,40 +54,49 @@ export default function AddMemoryModal({ onClose, onSubmit }: AddMemoryModalProp
         onDragLeave={() => setDragActive(false)}
         onDrop={handleDrop}
       >
-        <h2 className="text-2xl font-bold text-rose-500 mb-4 text-center">New Memory</h2>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-display text-rose-700">New Memory</h2>
+            <p className="text-sm text-slate-500 mt-1">
+              Add a title, a quick note, and a photo.
+            </p>
+          </div>
+          <button onClick={onClose} className="btn-ghost">
+            Close
+          </button>
+        </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4 mt-6">
           <input
             type="text"
-            placeholder="Title 💖"
+            placeholder="Memory title"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
+            className="input-field"
           />
           <textarea
-            placeholder="Your sweet note ✨"
+            placeholder="Write a short note..."
             value={formData.message}
             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            className="w-full px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
-            rows={3}
+            className="input-field min-h-[120px]"
           />
           <input
             type="date"
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-            className="w-full px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
+            className="input-field"
           />
 
           <div
             className={`w-full p-4 border-2 ${
               dragActive ? "border-rose-400" : "border-rose-200"
-            } border-dashed rounded-lg text-center text-gray-500 cursor-pointer transition`}
+            } border-dashed rounded-2xl text-center text-slate-500 cursor-pointer transition bg-white/70`}
             onClick={() => document.getElementById("imageInput")?.click()}
           >
             {formData.image ? (
-              <img src={formData.image} alt="Uploaded" className="mx-auto max-h-30 rounded" />
+              <img src={formData.image} alt="Uploaded" className="mx-auto max-h-48 rounded-2xl" />
             ) : (
-              <p>Drag & drop an image or click to upload 📷</p>
+              <p>Drag & drop an image, or click to upload</p>
             )}
             <input
               type="file"
@@ -104,7 +113,7 @@ export default function AddMemoryModal({ onClose, onSubmit }: AddMemoryModalProp
           <select
             value={formData.tag}
             onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-            className="w-full px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
+            className="input-field"
           >
             <option value="">Select category</option>
             <option value="Anniversary">Anniversary</option>
@@ -116,17 +125,11 @@ export default function AddMemoryModal({ onClose, onSubmit }: AddMemoryModalProp
         </div>
 
         <div className="flex justify-end gap-2 mt-6">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition cursor-pointer"
-          >
+          <button onClick={onClose} className="btn-ghost">
             Cancel
           </button>
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition cursor-pointer"
-          >
-            Add 💌
+          <button onClick={handleSubmit} className="btn-primary">
+            Add memory
           </button>
         </div>
       </motion.div>

@@ -1,24 +1,120 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 1s ease-out forwards;
-    opacity: 0;
+@layer base {
+  :root {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #0f172a;
+    background-color: #f7f3eb;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
-  .delay-100 { animation-delay: 0.1s; }
-  .delay-200 { animation-delay: 0.2s; }
-  .delay-300 { animation-delay: 0.3s; }
 
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
+  body {
+    margin: 0;
+    background: #f7f3eb;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
   }
 }
-.perspective {
-  perspective: 1200px;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Custom font utilities */
+  .font-cursive {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  /* Card wrapper */
+  .page-card {
+    background: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  /* Frosted glass inner panel */
+  .glass-panel {
+    background: rgba(255, 248, 240, 0.85);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 200, 180, 0.3);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Input fields */
+  .input-field {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2c9c0;
+    background: #fff;
+    font-size: 0.875rem;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+  }
+
+  .input-field:focus {
+    border-color: #f43f5e;
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.12);
+  }
+
+  .input-field::placeholder {
+    color: #94a3b8;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.75rem;
+    background: #f43f5e;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover {
+    background: #e11d48;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* Badge pills */
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background: #fce7e7;
+    color: #be123c;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
 }

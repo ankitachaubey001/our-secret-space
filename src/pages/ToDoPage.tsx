@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { addTaskToFirestore, deleteTaskFromFirestore, fetchTasks, toggleTaskCompletion } from "../libs/firestoreHelpers";
-
+import {
+  addTaskToFirestore,
+  deleteTaskFromFirestore,
+  fetchTasks,
+  toggleTaskCompletion,
+} from "../libs/firestoreHelpers";
 
 export type Task = {
   id: string;
@@ -42,65 +46,71 @@ export default function ToDoPage() {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-rose-600 mb-6">📝 Our To-Do List</h1>
+    <div className="page-shell">
+      <div className="max-w-3xl mx-auto">
+        <div className="page-card p-6 sm:p-8">
+          <h1 className="section-title">Shared To-Do</h1>
+          <p className="section-subtitle mt-2">
+            Keep your plans, errands, and little dreams in one list.
+          </p>
 
-      <div className="flex gap-2 mb-6">
-        <input
-          type="text"
-          placeholder="e.g. 🧺 Go on a picnic"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 px-4 py-2 border border-rose-200 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-300"
-        />
-        <button
-          onClick={addTask}
-          className="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-full shadow cursor-pointer"
-        >
-          Add
-        </button>
-      </div>
+          <div className="flex flex-col sm:flex-row gap-3 mt-6">
+            <input
+              type="text"
+              placeholder="Add something you want to do together..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="input-field flex-1"
+            />
+            <button onClick={addTask} className="btn-primary">
+              Add
+            </button>
+          </div>
+        </div>
 
-      {tasks.length === 0 ? (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center text-gray-400 mt-20"
-        >
-          Nothing planned yet… let's dream something 💭
-        </motion.p>
-      ) : (
-        <ul className="space-y-3">
-          {tasks.map((task) => (
-            <li
-              key={task.id}
-              className="flex items-center justify-between bg-pink-50 rounded-xl p-3 shadow"
+        <div className="mt-6">
+          {tasks.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="page-card p-8 text-center text-slate-500"
             >
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => handleToggle(task)}
-                  className="mr-3 w-5 h-5 text-rose-500 accent-rose-500"
-                />
-                <span
-                  className={`text-gray-700 ${
-                    task.completed ? "line-through opacity-60" : ""
-                  }`}
+              Nothing planned yet. Add your first idea above.
+            </motion.div>
+          ) : (
+            <ul className="space-y-3">
+              {tasks.map((task) => (
+                <li
+                  key={task.id}
+                  className="flex items-center justify-between bg-white/80 border border-rose-100 rounded-2xl p-4 shadow-sm"
                 >
-                  {task.text}
-                </span>
-              </div>
-              <button
-                onClick={() => handleDelete(task.id)}
-                className="text-sm text-gray-400 hover:text-rose-500 transition cursor-pointer"
-              >
-                🗑️
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => handleToggle(task)}
+                      className="w-5 h-5 text-rose-500 accent-rose-500"
+                    />
+                    <span
+                      className={`text-slate-700 ${
+                        task.completed ? "line-through opacity-60" : ""
+                      }`}
+                    >
+                      {task.text}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => handleDelete(task.id)}
+                    className="btn-ghost text-xs"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

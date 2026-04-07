@@ -13,26 +13,18 @@ export default function MemoryCard({ memory }: MemoryCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl shadow-md p-4 w-full max-w-sm border border-pink-100 hover:shadow-lg hover:-translate-y-1 transition-transform"
+      className="group rounded-3xl overflow-hidden bg-white/90 border border-rose-100 shadow-lg shadow-rose-100/70 hover:-translate-y-1 hover:shadow-xl transition"
     >
-<div className="aspect-w-4 aspect-h-5 w-full flex items-center justify-center overflow-hidden rounded-xl mb-3 bg-gray-100">
-  <img
-    src={memory.image}
-    alt="memory"
-    className="object-cover w-full h-full"
-  />
-</div>
+      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-100">
+        <img src={memory.image} alt="memory" className="h-full w-full object-cover" />
+      </div>
 
-
-
-      <div className="p-4">
-        {memory.tag && (
-          <span className="inline-block bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1 rounded-full mb-2">
-            {memory.tag}
-          </span>
-        )}
-        <h2 className="text-xl font-bold mb-1">{memory.title}</h2>
-        <p className="text-gray-600 text-sm">
+      <div className="p-5">
+        {memory.tag && <span className="badge">{memory.tag}</span>}
+        <h2 className="text-lg font-semibold text-slate-800 mt-3">
+          {memory.title}
+        </h2>
+        <p className="text-sm text-slate-500 mt-1">
           {memory.date.toLocaleDateString()}
         </p>
       </div>
